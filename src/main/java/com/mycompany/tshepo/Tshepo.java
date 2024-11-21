@@ -3,8 +3,6 @@
  */
 
 package com.mycompany.tshepo;
-import java.util.*;
-import java.util.regex.Pattern;
 import java.util.ArrayList;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -20,76 +18,71 @@ public class Tshepo {
     public static void main(String[] args) {
         
    final JDialog dialog = new JDialog();
-   dialog.setAlwaysOnTop(loggedIn);
-   Login login = new Login();
-    
-   Scanner sc = new Scanner(System.in);
-    //Registration process
-        System.out.println("===User Registration===");
-        System.out.println("Enter first name: ");
-        String firstName = sc.nextLine();
-        System.out.println("Enter your name: ");
-        String lastName = sc.nextLine();
-        System.out.println("Enter username(must contain an underscore and be no more than 5 characters):");
-        String username = sc.nextLine();
-        System.out.println("Enter password (must bee at least 8 character,containa capital letter,a number,and a special character):");
-        String password = sc.nextLine();
-        
-        //Register the user and display the result
+        dialog.setAlwaysOnTop(true);
+
+        Login login = new Login();
+
+        // User registration
+        String firstName = JOptionPane.showInputDialog("Enter first name:");
+        String lastName = JOptionPane.showInputDialog("Enter last name:");
+        String username = JOptionPane.showInputDialog("Enter username (must contain an underscore and be no more than 5 characters):");
+        String password = JOptionPane.showInputDialog("Enter password (must be at least 8 characters, contain a capital letter, a number, and a special character):");
+
         String registrationResult = login.registerUser(username, password, firstName, lastName);
-        System.out.println(registrationResult);
-        //If registration is successful, proceed to login
-        if(registrationResult.equals("Username and password successfully captured.")){
-            System.out.println("\n===User Login ===");
-            System.out.println("Enter username: ");
-            String loginUsername = sc.nextLine();
-            System.out.println("Enter password: ");
-            String loginPassword = sc.nextLine();
-            
-            boolean loginStats = login.LoginUser(loginUsername, loginPassword);
-            //Display the login status message
-            System.out.println(login.returnLoginStatus(loginStats));
-            
-        }
-            
-            
-            //if(loginStats){
-                //loggedIn = true;
-                JOptionPane.showMessageDialog(null,"Welcome to EasyKanban");
-                //part 2 starts here
-                TaskClass task = new TaskClass();
-             
-               
-                
-                //Creating a menu using switch and cases that shows user has loggin successfully
-                while (true){
-                    String[] options = {"Add tasks", "Show report", "Quit"};
+        JOptionPane.showMessageDialog(null, registrationResult);
+
+        if (registrationResult.equals("Username and password successfully captured.")) {
+            String loginUsername = JOptionPane.showInputDialog("Enter username for login:");
+            String loginPassword = JOptionPane.showInputDialog("Enter password for login:");
+
+            boolean loginStatus = login.LoginUser(loginUsername, loginPassword);
+            JOptionPane.showMessageDialog(null, login.returnLoginStatus(loginStatus));
+
+            if (loginStatus) {
+                loggedIn = true;
+                JOptionPane.showMessageDialog(null, "Welcome to EasyKanban!");
+
+                // Main Menu
+                while (true) {
+                    String[] options = {"Add Tasks", "Show Tasks (Done)", "Task with Longest Duration", "Search Task by Name", "Search Tasks by Developer", "Delete Task", "Display All Tasks", "Quit"};
                     int choice = JOptionPane.showOptionDialog(null, "Please choose an option", "EasyKanban Menu", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
-                   
-                    switch (choice){
-                        case 0 :
-                            task.addTasks();
+
+                    TaskClass task = new TaskClass();
+                    switch (choice) {
+                        case 0:
+                            task.addTask();
                             break;
-                        case 1 :
-                            JOptionPane.showMessageDialog(null, "Coming soon");
+                        case 1:
+                            task.displayDoneTasks();
                             break;
-                        case 2 :
-                            JOptionPane.showMessageDialog(null, "Exiting EasyKanban. Goodbye");
+                        case 2:
+                            task.findLongestTask();
+                            break;
+                        case 3:
+                            String searchName = JOptionPane.showInputDialog("Enter Task Name:");
+                            task.searchByTaskName(lastName);
+                            break;
+                        case 4:
+                            String developerName = JOptionPane.showInputDialog("Enter Developer Name:");
+                            task.searchTasksByDeveloper(developerName);
+                            break;
+                        case 5:
+                            String deleteName = JOptionPane.showInputDialog("Enter Task Name to Delete:");
+                            task.deleteTask(lastName);
+                            break;
+                        case 6:
+                            task.displayAllTasks();
+                            break;
+                        case 7:
+                            JOptionPane.showMessageDialog(null, "Exiting EasyKanban. Goodbye!");
                             return;
                         default:
-                            return;
-                            
+                            break;
+                    }
                 }
-                 
-                }
-                                         
-                
-                
-           
-        
-       
+            }
+        }
     }
-    
-}  
-    
+}
+
 
